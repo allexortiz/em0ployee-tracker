@@ -18,10 +18,10 @@ const db = mysql.createConnection(
         // MySQL username,
         user: 'root',
         // MySQL password
-        password: '',
+        password: 'Oliver0804!',
         database: 'employee_db'
     },
-    console.log(`Connected to the courses_db database.`)
+    console.log(`Connected to the employee_db database.`)
 );
 
 db.connect(function (err) {
@@ -190,3 +190,4 @@ function updateEmployee() {
         });
       });
   }
+
