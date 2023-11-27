@@ -25,10 +25,12 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_db database.`)
 );
 
+// Establish a connection and start the application
 db.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + db.threadId);
 
+    // Call the initial function to display the user prompt
     startScreen();
 });
 
@@ -53,6 +55,7 @@ function startScreen() {
         .then(function (result) {
             console.log("You entered: " + result.option);
 
+            // Switch statement to handle user input and call corresponding functions
             switch (result.option) {
                 case "Add department":
                     addDepartment();
@@ -81,6 +84,7 @@ function startScreen() {
         });
 }
 
+// Function to add a department
 function addDepartment() {
 
 
@@ -92,16 +96,17 @@ function addDepartment() {
 
     }).then(function (answer) {
 
-
-
+        // Insert the new department into the 'department' table
         db.query("INSERT INTO department (name) VALUES (?)", [answer.deptName], function (err, res) {
             if (err) throw err;
             console.table(res)
+            // Restart the application after the operation is complete
             startScreen()
         })
     })
 }
 
+// Function to add a role
 function addRole() {
     inquirer
         .prompt([
@@ -123,15 +128,17 @@ function addRole() {
         ])
         .then(function (answer) {
 
-
+            // Insert the new role into the 'role' table
             db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.roleName, answer.salaryTotal, answer.deptID], function (err, res) {
                 if (err) throw err;
                 console.table(res);
+                // Restart the application after the operation is complete
                 startScreen();
             });
         });
 }
 
+// Function to add an employee
 function addEmployee() {
     inquirer
         .prompt([
@@ -158,15 +165,17 @@ function addEmployee() {
         ])
         .then(function (answer) {
 
-
+            // Insert the new employee into the 'employee' table
             db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleID, answer.managerID], function (err, res) {
                 if (err) throw err;
                 console.table(res);
+                // Restart the application after the operation is complete
                 startScreen();
             });
         });
 }
 
+// Function to update an employee's role
 function updateEmployee() {
     inquirer
         .prompt([
@@ -184,48 +193,54 @@ function updateEmployee() {
         ])
         .then(function (answer) {
 
+            // Update the role of the specified employee in the 'employee' table
             db.query('UPDATE employee SET role_id=? WHERE first_name= ?', [answer.updateRole, answer.updateEmployee], function (err, res) {
                 if (err) throw err;
                 console.table(res);
+                // Restart the application after the operation is complete
                 startScreen();
             });
         });
 }
 
+// Function to view departments
 function viewDepartment() {
-    //select from the db
+    // Select all departments from the 'department' table
     let query = "SELECT * FROM department";
     db.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
+        // Restart the application after displaying the result
         startScreen();
     });
-    // show the result to the user (console.table)
 }
 
+// Function to view roles
 function viewRoles() {
-    // select from the db
+    // Select all roles from the 'role' table
     let query = "SELECT * FROM role";
     db.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
+        // Restart the application after displaying the result
         startScreen();
     });
-    // show the result to the user (console.table)
 }
 
+// Function to view employees
 function viewEmployees() {
-    // select from the db
+    // Select all employees from the 'employee' table
     let query = "SELECT * FROM employee";
     db.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
+        // Restart the application after displaying the result
         startScreen();
     });
-    // show the result to the user (console.table)
 }
 
+// Function to gracefully exit the application
 function quit() {
-    db.end();
-    process.exit();
+    db.end(); // Close the MySQL connection
+    process.exit(); // Terminate the application
 }

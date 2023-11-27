@@ -19,8 +19,8 @@ VALUES
 -- Insert initial data into the 'employee' table
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-  ("Dominic", "Calvert-Lewin", 1, 3),
+  ("Dominic", "Calvert-Lewin", 1),
   ("Farhad", "Moshiri", 5, 1),
   ("Sean", "Dyche", 4, 2),
-  ("Jimmy", "Martin", 3, 2),
-  ("Jurgen", "Klopp", 2, 2);
+  ("Jimmy", "Martin", 3),
+  ("Jurgen", "Klopp", 2);
