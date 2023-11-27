@@ -1,13 +1,16 @@
+// Dependencies
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
+// Configuration
 const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// Connect to the database
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -15,12 +18,14 @@ const db = mysql.createConnection({
     database: 'employee_db'
 }, console.log(`Connected to the employee_db database.`));
 
+// Establish a connection and start the application
 db.connect(err => {
     if (err) throw err;
     console.log("Connected as id " + db.threadId);
     startScreen();
 });
 
+// Function to display the initial user prompt
 const startScreen = () => inquirer.prompt({
     type: "list",
     choices: ["Add department", "Add role", "Add employee", "View departments", "View roles", "View employees", "Update employee role", "Quit"],
@@ -40,6 +45,7 @@ const startScreen = () => inquirer.prompt({
     }
 });
 
+// Function to add a department
 const addDepartment = () => inquirer.prompt({
     type: "input",
     message: "What is the name of the department?",
@@ -50,6 +56,7 @@ const addDepartment = () => inquirer.prompt({
     startScreen();
 }));
 
+// Function to add a role
 const addRole = () => inquirer.prompt([
     { type: "input", message: "What's the name of the role?", name: "roleName" },
     { type: "input", message: "What is the salary for this role?", name: "salaryTotal" },
@@ -61,6 +68,7 @@ const addRole = () => inquirer.prompt([
         startScreen();
     }));
 
+// Function to add an employee
 const addEmployee = () => inquirer.prompt([
     { type: "input", message: "What's the first name of the employee?", name: "firstName" },
     { type: "input", message: "What's the last name of the employee?", name: "lastName" },
@@ -73,6 +81,7 @@ const addEmployee = () => inquirer.prompt([
         startScreen();
     }));
 
+// Function to update an employee's role
 const updateEmployee = () => inquirer.prompt([
     { type: "input", message: "Which employee would you like to update?", name: "updateEmployee" },
     { type: "input", message: "What do you want to update to?", name: "updateRole" }
@@ -82,24 +91,28 @@ const updateEmployee = () => inquirer.prompt([
     startScreen();
 }));
 
+// Function to view departments
 const viewDepartment = () => db.query("SELECT * FROM department", (err, res) => {
     if (err) throw err;
     console.table(res);
     startScreen();
 });
 
+// Function to view roles
 const viewRoles = () => db.query("SELECT * FROM role", (err, res) => {
     if (err) throw err;
     console.table(res);
     startScreen();
 });
 
+// Function to view employees
 const viewEmployees = () => db.query("SELECT * FROM employee", (err, res) => {
     if (err) throw err;
     console.table(res);
     startScreen();
 });
 
+// Function to gracefully exit the application
 const quit = () => {
     db.end();
     process.exit();
