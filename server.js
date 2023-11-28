@@ -1,4 +1,4 @@
-// Dependencies
+// Dependencies found here
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
@@ -7,13 +7,17 @@ const cTable = require('console.table');
 // Configuration
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+// Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Connect to the database
 const db = mysql.createConnection({
     host: 'localhost',
+    //MySQL username
     user: 'root',
+    //MySQL password
     password: 'Oliver0804!',
     database: 'employee_db'
 }, console.log(`Connected to the employee_db database.`));
@@ -33,6 +37,7 @@ const startScreen = () => inquirer.prompt({
     name: "option"
 }).then(result => {
     console.log("You entered: " + result.option);
+    // Switch statement to handle user input and call corresponding functions
     switch (result.option) {
         case "Add department": addDepartment(); break;
         case "Add role": addRole(); break;
