@@ -55,11 +55,16 @@ const addDepartment = () => inquirer.prompt({
     type: "input",
     message: "What is the name of the department?",
     name: "deptName"
-}).then(answer => db.query("INSERT INTO department (name) VALUES (?)", [answer.deptName], (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startScreen();
-}));
+}).then(answer => {
+    // Insert the new department into the 'department' table
+    db.query("INSERT INTO department (name) VALUES (?)", [answer.deptName], function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        // Restart the application after the operation is complete
+        startScreen();
+    });
+});
+
 
 // Function to add a role
 const addRole = () => inquirer.prompt([
