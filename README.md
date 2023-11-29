@@ -64,5 +64,5 @@ This application was built to view all the departments, roles, and employees, as
 ## Questions
 If you have any addition questions feel free to reach me at either my github or email address.
 
--[GitHub](https://github.com/allexortiz)
--[Email](allexortiz@outlook.com)
+- [GitHub](https://github.com/allexortiz)
+- [Email](allexortiz@outlook.com)
