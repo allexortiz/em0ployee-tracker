@@ -49,7 +49,7 @@ This application was built to view all the departments, roles, and employees, as
 
 ## Links
 - [Github Repository](https://github.com/allexortiz/employee-tracker)
-- [Demo Video]()
+- [Demo Video](https://drive.google.com/file/d/1RynvcG4I4p7acfVZ1Nt9VFjXhzb9Nloo/view)
 
 ## Usage
 1. Open the terminal
