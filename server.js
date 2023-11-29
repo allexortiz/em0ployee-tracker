@@ -1,4 +1,4 @@
-// Dependencies found here
+// Dependencies
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
@@ -15,9 +15,7 @@ app.use(express.json());
 // Connect to the database
 const db = mysql.createConnection({
     host: 'localhost',
-    //MySQL username
     user: 'root',
-    //MySQL password
     password: 'Oliver0804!',
     database: 'employee_db'
 }, console.log(`Connected to the employee_db database.`));
@@ -57,26 +55,36 @@ const addDepartment = () => inquirer.prompt({
     name: "deptName"
 }).then(answer => {
     // Insert the new department into the 'department' table
-    db.query("INSERT INTO department (name) VALUES (?)", [answer.deptName], function (err, res) {
-        if (err) throw err;
-        console.table(res);
-        // Restart the application after the operation is complete
-        startScreen();
-    });
+    db.promise().execute("INSERT INTO department (name) VALUES (?)", [answer.deptName])
+        .then(([rows, fields]) => {
+            console.table(rows);
+            // Restart the application after the operation is complete
+            startScreen();
+        })
+        .catch(err => {
+            console.error(err);
+            startScreen();
+        });
 });
-
 
 // Function to add a role
 const addRole = () => inquirer.prompt([
     { type: "input", message: "What's the name of the role?", name: "roleName" },
     { type: "input", message: "What is the salary for this role?", name: "salaryTotal" },
     { type: "input", message: "What is the department id number?", name: "deptID" }
-]).then(answer => db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
-    [answer.roleName, answer.salaryTotal, answer.deptID], (err, res) => {
-        if (err) throw err;
-        console.table(res);
-        startScreen();
-    }));
+]).then(answer => {
+    // Use db.promise().execute for promise-based queries
+    db.promise().execute("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+        [answer.roleName, answer.salaryTotal, answer.deptID])
+        .then(([rows, fields]) => {
+            console.table(rows);
+            startScreen();
+        })
+        .catch(err => {
+            console.error(err);
+            startScreen();
+        });
+});
 
 // Function to add an employee
 const addEmployee = () => inquirer.prompt([
@@ -84,43 +92,71 @@ const addEmployee = () => inquirer.prompt([
     { type: "input", message: "What's the last name of the employee?", name: "lastName" },
     { type: "input", message: "What is the employee's role id number?", name: "roleID" },
     { type: "input", message: "What is the manager id number?", name: "managerID" }
-]).then(answer => db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
-    [answer.firstName, answer.lastName, answer.roleID, answer.managerID], (err, res) => {
-        if (err) throw err;
-        console.table(res);
-        startScreen();
-    }));
+]).then(answer => {
+    // Use db.promise().execute for promise-based queries
+    db.promise().execute("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+        [answer.firstName, answer.lastName, answer.roleID, answer.managerID])
+        .then(([rows, fields]) => {
+            console.table(rows);
+            startScreen();
+        })
+        .catch(err => {
+            console.error(err);
+            startScreen();
+        });
+});
 
 // Function to update an employee's role
 const updateEmployee = () => inquirer.prompt([
     { type: "input", message: "Which employee would you like to update?", name: "updateEmployee" },
     { type: "input", message: "What do you want to update to?", name: "updateRole" }
-]).then(answer => db.query('UPDATE employee SET role_id=? WHERE first_name= ?', [answer.updateRole, answer.updateEmployee], (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startScreen();
-}));
+]).then(answer => {
+    console.log("Updating employee:", answer.updateEmployee, "to role:", answer.updateRole);
+
+    // Use the promise-based API for queries
+    db.promise().execute('UPDATE employee SET role_id=? WHERE first_name= ?', [answer.updateRole, answer.updateEmployee])
+        .then(([rows, fields]) => {
+            console.table(rows);
+            startScreen();
+        })
+        .catch(err => {
+            console.error(err);
+            startScreen();
+        });
+});
 
 // Function to view departments
-const viewDepartment = () => db.query("SELECT * FROM department", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startScreen();
-});
+const viewDepartment = () => db.promise().execute("SELECT * FROM department")
+    .then(([rows, fields]) => {
+        console.table(rows);
+        startScreen();
+    })
+    .catch(err => {
+        console.error(err);
+        startScreen();
+    });
 
 // Function to view roles
-const viewRoles = () => db.query("SELECT * FROM role", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startScreen();
-});
+const viewRoles = () => db.promise().execute("SELECT * FROM role")
+    .then(([rows, fields]) => {
+        console.table(rows);
+        startScreen();
+    })
+    .catch(err => {
+        console.error(err);
+        startScreen();
+    });
 
 // Function to view employees
-const viewEmployees = () => db.query("SELECT * FROM employee", (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    startScreen();
-});
+const viewEmployees = () => db.promise().execute("SELECT * FROM employee")
+    .then(([rows, fields]) => {
+        console.table(rows);
+        startScreen();
+    })
+    .catch(err => {
+        console.error(err);
+        startScreen();
+    });
 
 // Function to gracefully exit the application
 const quit = () => {
