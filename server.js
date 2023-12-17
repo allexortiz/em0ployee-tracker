@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
 const cTable = require('console.table');
+require('dotenv').config();
 
 // Configuration
 const PORT = process.env.PORT || 3001;
@@ -15,9 +16,9 @@ app.use(express.json());
 // Connect to the database
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'Oliver0804!',
-    database: 'employee_db'
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
 }, console.log(`Connected to the employee_db database.`));
 
 // Establish a connection and start the application
